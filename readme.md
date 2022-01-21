@@ -3,7 +3,7 @@
 # Intro 
 
 <p align="center">
-  <img src="./public/guppyLogo.png" width=500 height=500>
+  <img src="./public/guppyLogo.png" width=400 height=400>
 </p>
 
 Guppy is an argument-based, random data generation agnostic testing library. The library is intended to be used in conjunction with source code written in a functional paradigm. 
