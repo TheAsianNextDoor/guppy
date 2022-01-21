@@ -2,7 +2,9 @@
 
 # Intro 
 
-<img src="./public/guppyLogo.png" width=500 height=500>
+<p align="center">
+  <img src="./public/guppyLogo.png" width=500 height=500>
+</p>
 
 Guppy is an argument-based, random data generation agnostic testing library. The library is intended to be used in conjunction with source code written in a functional paradigm. 
 
@@ -86,28 +88,45 @@ it('Happy Birthday failing',  () => {
 
 # Schema Structure
 
-A schema can be something as simple as a single primitive or as complex as an Array of Objects. When parsing the schema, the parser will assume all functions generate a random value. Meaning you can leverage any random data generation library you desire, or the one's provided by Node/Browser, you simply have to wrap it a function.
+A schema can be something as simple as a single primitive or as complex as an Array of Objects. When parsing the schema, the parser will assume all functions generate a random value. Meaning you can leverage any random data generation library you desire, or the one's provided by Node/Browser, simply wrap it in a function.
 
 Examples:
 
 ```js
 
 // only generates a string of 'single value'
-const config1 = 'single value'
+const schema = 'single value';
 
 
 const carColor = ['red', 'white', 'black'];
 const randomCarColor = () => carColor[Math.floor(Math.random() * 2)];
-// generates an array of [randomNumber, hi, randomCarColor]
-const config2 = [() => Math.random(), 'hi', randomCarColor];
+// generates an array of [randomNumber, hi, 'red' || 'white' || 'black']
+const schema = [() => Math.random(), 'hi', randomCarColor];
 
 
 // generates an object with random values for each key
-const config3 = {
-    firstName: first();
-    lastName: last();
+const schema = {
+    firstName: firstName();
+    lastName: lastName();
     city: city();
-}
+};
+
+
+// complex schema 
+const schema = {
+  data: {
+    users: [
+      {
+        name: nameGenerator()
+        address: addressGenerator(),
+      },
+      {
+        name: nameGenerator()
+        address: addressGenerator(),
+      },
+    ],
+  },
+};
 
 ```
 
