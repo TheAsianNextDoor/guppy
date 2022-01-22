@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import assert from 'assert';
 
 import {
@@ -13,7 +11,7 @@ import {
 import { test } from '../src/test';
 
 // function being tested
-const transformResponse = (response) => ({ 
+const transformResponse = (response: any) => ({ 
     name: `${response.firstName} ${response.lastName}`,
     age: `${response.age} years old`,
     color: response.twoFavoriteColors[0], 

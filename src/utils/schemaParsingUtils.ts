@@ -14,7 +14,7 @@ export const parseArray = <T>(arr: T[]): T[] => arr.map((item: T) => {
     return item;
 });
 
-export const parseObject = (schemaObject: object):object => {
+export const parseObject = (schemaObject: object): object => {
     return Object.entries(schemaObject).reduce(
         (
             prevObj: object, 

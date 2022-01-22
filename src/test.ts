@@ -8,6 +8,22 @@ import {
 } from './utils/schemaParsingUtils';
 import { getUniqueValue } from './utils/uniqueUtils';
 
+type FunctionType = (...args: any) => any;
+type ParsedObject<T> = { 
+    [K in keyof T]: T[K] extends FunctionType 
+        ? ReturnType<T[K]> 
+        : T[K] extends Object 
+            ? ParsedObject<T[K]> 
+            : T[K] 
+};
+type ParsedSchema<T extends | Object | FunctionType | Array<T> | any> = T extends FunctionType 
+    ? ReturnType<T>
+    : T extends Array<T> 
+        ? T[] 
+        : T extends Object 
+            ? ParsedObject<T> 
+            : T;
+
 const handleAggregatedErrors = (
     errorArray: Error[], 
     logger?: Function, 
@@ -25,9 +41,9 @@ const handleAggregatedErrors = (
     throw new Error(constructMessage);
 };
 
-export const test = async (
-    generatorSchema: unknown, 
-    testFunction: (randomValue: any) => Promise<void> | void,
+export const test = async <T>(
+    generatorSchema: T, 
+    testFunction: (randomValue: ParsedSchema<T>) => Promise<void> | void,
     options?: SetConfigArgType,
 ) => {
     const {
@@ -52,7 +68,7 @@ export const test = async (
     
     while (iterationCount < iterations) {   
         try { 
-            let generatedValue;
+            let generatedValue: ParsedSchema<T>;
             const shouldGenerateUnique = selectUniqueValues && hasGeneratorFunctionInSchema && !depletedUniqueValues;
 
             if (shouldGenerateUnique) {
@@ -61,9 +77,9 @@ export const test = async (
                     previouslyChosenValues, 
                     notifyDepletedUniques, 
                     uniqueValueAttempts,
-                );
+                ) as ParsedSchema<T>;
             } else {
-                generatedValue = schemaParser(generatorSchema);
+                generatedValue = schemaParser(generatorSchema) as ParsedSchema<T>;
             }
 
             await testFunction(generatedValue);

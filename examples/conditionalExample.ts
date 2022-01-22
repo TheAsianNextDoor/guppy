@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import assert from 'assert';
 
 import { integer } from '../src/chanceWrapper/chance';
@@ -12,7 +10,7 @@ import {
 
 
 // function being tested
-const specialStringFromNumber = (number) => {
+const specialStringFromNumber = (number: number) => {
     if (number === 0) {
         return `${number} is special`;
     }
