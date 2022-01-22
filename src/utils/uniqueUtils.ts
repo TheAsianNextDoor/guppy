@@ -2,25 +2,25 @@ import assert from 'assert';
 
 import { schemaParser } from './schemaParsingUtils';
 
-const determineIfUnique = (
-    previouslyChosenValues: any[], 
-    potentialSelection: any,
-) => previouslyChosenValues.some((value) => {
-    try {
-        assert.deepEqual(potentialSelection, value);
-        return true;
-    } catch (e) {
-        return false;
-    }
-});
+const determineIfUnique = <T, V>(
+    previouslyChosenValues: T[], 
+    potentialSelection: V,
+): boolean => previouslyChosenValues.some((value: T) => {
+        try {
+            assert.deepEqual(potentialSelection, value);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    });
 
 export const getUniqueValue = (
-    generatorSchema: any, 
-    previouslyChosenValues: any[], 
+    generatorSchema: unknown, 
+    previouslyChosenValues: unknown[], 
     notifyDepletedUniques: Function,
     maxIterations: number,
 ) => {
-    let generatedValue: any;
+    let generatedValue: unknown;
     let iterations = 0;
 
     if (!previouslyChosenValues.length) {

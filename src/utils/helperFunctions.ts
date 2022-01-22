@@ -6,7 +6,7 @@ import {
     isFunction, 
 } from './typeUtils';
 
-export const selectOne = (arrayOfGenerators: Array<any>) => () => {
+export const selectOne = <T>(arrayOfGenerators: T[]) => (): T => {
     if (!isArray(arrayOfGenerators) || !arrayOfGenerators?.length) {
         throw new Error('Must pass array of length > 0 to Guppy - selectOne');
     }
@@ -24,6 +24,8 @@ export const selectOne = (arrayOfGenerators: Array<any>) => () => {
     }
 
     if (isFunction(generatorOrValue)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return generatorOrValue();
     }
 
@@ -35,31 +37,31 @@ export const conditional = (expectation: Function, condition: boolean) => {
     if (condition) expectation();
 };
 
-export const generateValueBesides = (
+export const generateValueBesides = <T>(
     generatorFunction: Function, 
-    arrayOfValuesToAvoid: any[],
-    maxIterations: number,
-) => () => {
-    if (!isFunction(generatorFunction)) {
-        throw new Error('Must pass generatorFunction a function to Guppy - generateValueBesides');
-    }
-
-    if (!isArray(arrayOfValuesToAvoid) || !arrayOfValuesToAvoid?.length) {
-        throw new Error('Must pass arrayOfValuesToAvoid an array of length > 0 to Guppy - generateValueBesides');
-    }
-
-    let iteration = 0;
-    const maxNumberOfAttempts = maxIterations || getConfig().uniqueValueAttempts;
-
-    while (true) {
-        const potentialValue = generatorFunction();
-        const matchesValueToAvoid = arrayOfValuesToAvoid.includes(potentialValue);
-
-        if (!matchesValueToAvoid) return potentialValue;
-        
-        iteration += 1;
-        if (iteration >= maxNumberOfAttempts) {
-            throw new Error('Unable to generate values not included in avoidance array');
+    arrayOfValuesToAvoid: T[],
+    maxIterations = 5,
+) => (): T => {
+        if (!isFunction(generatorFunction)) {
+            throw new Error('Must pass generatorFunction a function to Guppy - generateValueBesides');
         }
-    }
-};
+
+        if (!isArray(arrayOfValuesToAvoid) || !arrayOfValuesToAvoid?.length) {
+            throw new Error('Must pass arrayOfValuesToAvoid an array of length > 0 to Guppy - generateValueBesides');
+        }
+
+        let iteration = 0;
+        const maxNumberOfAttempts = maxIterations || getConfig().uniqueValueAttempts;
+
+        while (true) {
+            const potentialValue = generatorFunction();
+            const matchesValueToAvoid = arrayOfValuesToAvoid.includes(potentialValue);
+
+            if (!matchesValueToAvoid) return potentialValue;
+        
+            iteration += 1;
+            if (iteration >= maxNumberOfAttempts) {
+                throw new Error('Unable to generate values not included in avoidance array');
+            }
+        }
+    };

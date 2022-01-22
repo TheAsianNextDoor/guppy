@@ -8,14 +8,6 @@ import {
 } from './utils/schemaParsingUtils';
 import { getUniqueValue } from './utils/uniqueUtils';
 
-type TestType = (
-    generatorSchema: any, 
-    testFunction: TestFunctionType, 
-    options?: SetConfigArgType
-) => void;
-
-type TestFunctionType = (randomValues: any) => Promise<void> | void;
-
 const handleAggregatedErrors = (
     errorArray: Error[], 
     logger?: Function, 
@@ -33,10 +25,10 @@ const handleAggregatedErrors = (
     throw new Error(constructMessage);
 };
 
-export const test: TestType = async (
-    generatorSchema, 
-    testFunction,
-    options,
+export const test = async (
+    generatorSchema: unknown, 
+    testFunction: (randomValue: any) => Promise<void> | void,
+    options?: SetConfigArgType,
 ) => {
     const {
         iterations,
@@ -51,7 +43,7 @@ export const test: TestType = async (
     };
     let iterationCount = 0;
     let errorCount = 0;
-    const errorArray = [];
+    const errorArray: Error[] = [];
     const previouslyChosenValues: any[] = [];
     const hasGeneratorFunctionInSchema = parseSchemaForFunction(generatorSchema);
 
@@ -75,13 +67,13 @@ export const test: TestType = async (
             }
 
             await testFunction(generatedValue);
-        } catch (error: any) {
+        } catch (error) {
             errorCount = errorCount += 1;
 
             if (fastFail) {
                 throw error;
             } else {
-                errorArray.push(error);
+                errorArray.push(error as Error);
             }
         }
 

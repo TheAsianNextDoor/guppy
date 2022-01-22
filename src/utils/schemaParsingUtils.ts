@@ -4,7 +4,7 @@ import {
     isObject, 
 } from './typeUtils';
 
-export const parseArray = (arr: any[]): any[] => arr.map((item: any) => {
+export const parseArray = <T>(arr: T[]): T[] => arr.map((item: T) => {
     if (isFunction(item)) return item();
     if (isArray(item)) return parseArray(item);
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -14,12 +14,15 @@ export const parseArray = (arr: any[]): any[] => arr.map((item: any) => {
     return item;
 });
 
-export const parseObject = (schemaObject: object):any => {
+export const parseObject = (schemaObject: object):object => {
     return Object.entries(schemaObject).reduce(
-        (prevObj: object, [
-            key,
-            value,
-        ]) => {
+        (
+            prevObj: object, 
+            [
+                key,
+                value,
+            ],
+        ) => {
             if (isFunction(value)) return {
                 ...prevObj,
                 [key]: value(), 
@@ -43,7 +46,7 @@ export const parseObject = (schemaObject: object):any => {
     );
 };
 
-export const schemaParser = (schema: any): any => {
+export const schemaParser = (schema: unknown): unknown => {
     if (isFunction(schema)) return schema();
     if (isArray(schema)) return parseArray(schema);
     if (isObject(schema)) return parseObject(schema);
@@ -52,8 +55,8 @@ export const schemaParser = (schema: any): any => {
     return schema;
 };
 
-export const parseArrayForFunction = (arr: any[]): boolean => {
-    const entityResultList = arr.map((item: any) => {
+export const parseArrayForFunction = <T>(arr: T[]): boolean => {
+    const entityResultList = arr.map((item: T) => {
         if (isFunction(item)) return true;
         if (isArray(item)) return parseArrayForFunction(item);
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -81,7 +84,7 @@ export const parseObjectForFunction = (schemaObject: object): boolean => {
     return entityResultList.includes(true);
 };
 
-export const parseSchemaForFunction = (schema: any): any => {
+export const parseSchemaForFunction = (schema: unknown): unknown => {
     if (isFunction(schema)) return true;
     if (isArray(schema)) return parseArrayForFunction(schema);
     if (isObject(schema)) return parseObjectForFunction(schema);
