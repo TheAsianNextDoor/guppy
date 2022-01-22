@@ -27,7 +27,7 @@ const goodConfig = {
     }),
     twoFavoriteColors: [
         1,
-        2,
+        integer(),
     ],
     address: {
         street: address(),
