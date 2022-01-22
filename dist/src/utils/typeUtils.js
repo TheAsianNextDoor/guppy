@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isBoolean = exports.isError = exports.isArray = exports.isObject = exports.isFunction = void 0;
+const type_check_1 = require("type-check");
+const isFunction = (variable) => (0, type_check_1.typeCheck)('Function', variable);
+exports.isFunction = isFunction;
+const isObject = (variable) => (0, type_check_1.typeCheck)('Object', variable);
+exports.isObject = isObject;
+const isArray = (variable) => (0, type_check_1.typeCheck)('Array', variable);
+exports.isArray = isArray;
+const isError = (variable) => (0, type_check_1.typeCheck)('Error', variable);
+exports.isError = isError;
+const isBoolean = (variable) => (0, type_check_1.typeCheck)('Boolean', variable);
+exports.isBoolean = isBoolean;
