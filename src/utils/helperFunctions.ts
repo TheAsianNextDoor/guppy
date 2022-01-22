@@ -6,7 +6,7 @@ import {
     isFunction, 
 } from './typeUtils';
 
-export const selectOne = <T>(arrayOfGenerators: T[]) => (): T => {
+export const selectOne = <T>(arrayOfGenerators: T[]): T => {
     if (!isArray(arrayOfGenerators) || !arrayOfGenerators?.length) {
         throw new Error('Must pass array of length > 0 to Guppy - selectOne');
     }
@@ -24,8 +24,6 @@ export const selectOne = <T>(arrayOfGenerators: T[]) => (): T => {
     }
 
     if (isFunction(generatorOrValue)) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         return generatorOrValue();
     }
 
